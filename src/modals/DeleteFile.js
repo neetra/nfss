@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import  '../style.css'
 import axios from'axios'
 import DelIcon from '../icons/delete-nfss.png'
+import Constants from '../Constants';
 
 class DeleteFile extends React.Component {
     constructor () {
@@ -21,10 +22,33 @@ class DeleteFile extends React.Component {
     }
    
  
-  handleDelete(event, callback) {
-      let file_key =  event.target.parentNode.parentNode.parentNode.id
-     //Delete 
+  handleDelete(event) {
+     let file_id =  event.target.id
+      
+      let data = window.localStorage.getItem("filesData")
+       let arr = JSON.parse(data)
+       let fileDetails = arr.find(n=> n.file_id === parseInt(file_id))
 
+      let url = Constants.BASEURL + "/file/" + fileDetails.file_key
+     //Delete 
+     axios.delete(url,
+      {headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization' : window.localStorage.getItem("token")
+      }
+    })
+      .then((response) => 
+      {
+          if(response.status ===200)
+          {
+              console.log("File Deleted")
+          }
+          else{
+              return "Cannot create the user"
+          }
+      })
+      .catch((json) => "Error while creating user" + json);
+      this.handleCloseModal(event)
       }
     
     handleOpenModal (e) {
@@ -45,7 +69,7 @@ class DeleteFile extends React.Component {
       return (
        
         <div>
-          <img className="table-icon-del" src={DelIcon} onClick={this.handleOpenModal}></img>
+          <img className="table-icon-del" id={this.props.file_id} src={DelIcon} onClick={this.handleOpenModal}></img>
           <Modal 
              isOpen={this.state.showModal}
              id = "nfss-table-icon-del-modal"
@@ -58,7 +82,7 @@ class DeleteFile extends React.Component {
                 Do you want to delete file ?
             </div>           
             <div className = 'modal-footer'>           
-            <button className='nfss-modal-button' onClick={(func) => {this.handleDelete(func)}}>Delete</button>
+            <button className='nfss-modal-button' id={this.props.file_id} onClick={ this.handleDelete}>Delete</button>
             <button className='nfss-modal-button' onClick={this.handleCloseModal}>Close</button>
             </div>
             </div>

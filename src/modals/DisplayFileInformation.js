@@ -5,7 +5,7 @@ import  '../style.css'
 import axios from'axios'
 import InfoIcon from '../icons/information.png'
 
-class ExampleApp extends React.Component {
+class DisplayFileInformation extends React.Component {
     constructor () {
       super();
       this.state = {
@@ -15,10 +15,14 @@ class ExampleApp extends React.Component {
       
       this.download_link_key = "download_link"
       this.form_input = {
-        "userId" : "user Id",
-        "id":"id",
-        "title" : "Title",
-        "body" : "body"
+        "file_name" : "Name",
+        "file_description":"Description",
+        "file_created_at" : "Created At",
+        "file_modified_at" : "Modified At",
+        "user_email" : "Email",
+        "user_first_name" : "First Name",
+        "user_last_name" : "Last Name"
+
     
       }
    
@@ -30,24 +34,13 @@ class ExampleApp extends React.Component {
    
  
   getFileInformation(event) {
-      let file_key =  event.target.parentNode.parentNode.parentNode.id
-       axios.get('https://jsonplaceholder.typicode.com/posts/7',
-          {headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }
-        })
-          .then((response) => 
-          {
-              if(response.status ===200)
-              {
-                  console.log(response)
-                this.setState({data: response.data})
-              }
-              else{
-                  return "Cannot create the user"
-              }
-          })
-          .catch((json) => "Error while creating user" + json);
+      let file_id =  event.target.parentNode.parentNode.parentNode.id
+      console.log(file_id)
+       let data = window.localStorage.getItem("filesData")
+       let arr = JSON.parse(data)
+       let fileDetails = arr.find(n=> n.file_id === parseInt(file_id))
+       console.log(fileDetails)
+       this.setState({data : fileDetails}) 
       }
     
     handleOpenModal (e) {
@@ -103,4 +96,4 @@ class ExampleApp extends React.Component {
     }
   }
 
-export default ExampleApp;
+export default DisplayFileInformation;

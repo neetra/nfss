@@ -3,21 +3,21 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import '../style.css'
 import axios from'axios'
+import Constants from '../Constants'
+
 class LoginUser extends React.Component {
     constructor () {
       super();
       this.state = {
         showModal: false,
         message: "",
-        forminput : {
-          
-          email : "",
+        formInput : {          
+          username : "",
           password: ""
         }        
       };
 
-      this.form_input = [
-        
+      this.form_input = [        
         "Email",
         "Password"
     ]
@@ -27,46 +27,46 @@ class LoginUser extends React.Component {
       this.handleUserLogin = this.handleUserLogin.bind(this);
     }
     handleChange(event) {
-      var curr_val = this.state.forminput
+      var curr_val = this.state.formInput
       switch(event.target.id) {          
             case "email":
-              curr_val.email = event.target.value
+              curr_val.username = event.target.value
             break;
             case "password":
               curr_val.password = event.target.value
             break;
           
         }
-        this.setState({forminput : curr_val})
-      //this.setState({value: event.target.value});
-    }
-  
-  async handleSubmit(event) {
+        this.setState({formInput : curr_val})
       
-      return await axios.post('https://jsonplaceholder.typicode.com/posts', this.state.forminput,
-          {headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }
-        })
-          .then((response) => 
-          {
-              if(response.status ===201)
-              {
-                console.log(this.state.forminput)
-                  return "User successfully created"
-              }
-              else{
-                  return "Cannot create the user"
-              }
-          })
-          .catch((json) => "Error while creating user" + json);
+    }  
+ 
+     handleUserLogin(callback){
+      var url = Constants.BASEURL
+       axios.post(url+'/auth', this.state.formInput,
+      {
+        headers: {
+        'Content-type': 'application/json; charset=UTF-8',
       }
-    async handleUserLogin(callback){
-     
-    //  e.preventDefault();
-    //   let messageOutput = await this.handleSubmit()
-    //   this.setState({message : messageOutput }) 
-        callback("netra");
+    })
+      .then((response) => 
+      {
+          if(response.status ===200)
+          {
+            let at= Constants.JSON["ACCESSTOKEN"]
+            console.log(response.data[at])
+            let token = "JWT " + response.data[at]
+            console.log(token)
+            callback(token);
+              console.log( "User login created")
+          }
+          else{
+              console.log("Cannot login the user")
+              
+          }
+      })
+      .catch((json) => "Error while logging user" + json); 
+        
     }
     handleOpenModal () {
       this.setState({ showModal: true });
@@ -100,13 +100,11 @@ class LoginUser extends React.Component {
                                 {element}   
                                 </div>
                                 <input className="nfss-modal-value" id={id} value={this.state[id]} onChange={this.handleChange}>
-                                </input>
-                       
+                                </input>                       
                             </div>
-                          )
-                        
+                          )                        
                        })
-                 }
+                                        }
             </div>
             <div className='modal-output-message'>{this.state.message}</div>
             <div className = 'modal-footer'>

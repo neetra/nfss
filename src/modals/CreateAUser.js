@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import '../style.css'
 import axios from'axios'
-class ExampleApp extends React.Component {
+import Constants from '../Constants';
+class CreateUser extends React.Component {
     constructor () {
       super();
       this.state = {
@@ -51,15 +52,16 @@ class ExampleApp extends React.Component {
     }
   
   async handleSubmit(event) {
-      
-      return await axios.post('https://jsonplaceholder.typicode.com/posts', this.state.forminput,
+    let url = Constants.BASEURL + "/create-user"
+      return await axios.post(url, this.state.forminput,
           {headers: {
             'Content-type': 'application/json; charset=UTF-8',
+            'Authorization' : window.localStorage.getItem("token")
           }
         })
           .then((response) => 
           {
-              if(response.status ===201)
+              if(response.status ===200)
               {
                 console.log(this.state.forminput)
                   return "User successfully created"
@@ -127,4 +129,4 @@ class ExampleApp extends React.Component {
     }
   }
 
-export default ExampleApp;
+export default CreateUser;

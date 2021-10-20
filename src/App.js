@@ -7,6 +7,7 @@ import RefreshIcon from './icons/refresh-nfss.png'
 import AddIcon from './icons/add-nfss.png'
 import axios from 'axios'
 import UploadFile from './UploadFile';
+import Constants from './Constants';
 class App extends React.Component {
   constructor () {
     super();
@@ -28,11 +29,11 @@ class App extends React.Component {
    console.log(e)
  }
   handleRefresh(e){
-    alert("handle refresh")
-    axios.get('https://jsonplaceholder.typicode.com/posts',
+    let url = Constants.BASEURL + "/files"
+    axios.get(url,
     {headers: {
       'Content-type': 'application/json; charset=UTF-8',
-      'Authorization' : ""
+      'Authorization' : window.localStorage.getItem("token")
     }
   })
     .then((response) => 
@@ -40,9 +41,10 @@ class App extends React.Component {
         if(response.status ===200)
         {
             console.log(response)
-            window.localStorage.setItem('filesData', response.data);
-            window.localStorage.setItem("token", "")
-          this.setState({data: response.data})
+            let allFiles  = response.data["Files"]
+            let jsonstring = JSON.stringify(allFiles)
+            window.localStorage.setItem('filesData', jsonstring);           
+          this.setState({data: allFiles})
         }
         else{
             return "Cannot create the user"
@@ -52,14 +54,15 @@ class App extends React.Component {
  
   }
   handleChange(e){
-console.log(e)
 
+window.localStorage.setItem("token", e)
 this.setState({token : e})
 this.handleRefresh(e)
 
   }
   render () {
-     if(this.state.token === "")
+     let token  = window.localStorage.getItem("token")
+     if(token === undefined || token === null ||token === "")
      {
 
       return (

@@ -17,8 +17,8 @@ class Table extends React.Component {
         return this.props.data.map((element, index) => {
           
            return (
-              <tr id={element.id} key={element.id}>
-                 <td>{element.id}</td>
+              <tr id={element.file_id} key={element.file_key}>
+                 <td>{element.file_name}</td>
                  <td>
                      <DisplayFileInfo />
                  </td>
@@ -26,7 +26,7 @@ class Table extends React.Component {
                      <img className="table-icon-info" src={EditIcon}></img>
                  </td>
                  <td>
-                     <DeleteFile />
+                     <DeleteFile file_id={element.file_id}/>
                  </td>
               </tr>
            )

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{Component} from 'react'; 
 import AddIcon from './icons/add-nfss.png'
-import baseURL from  './config'; 
+import Constants from './Constants'
 class UploadFile extends Component { 
     constructor () {
         super();
@@ -30,10 +30,11 @@ class UploadFile extends Component {
         var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzQ2MjU2NzMsImlhdCI6MTYzNDYyNTM3MywibmJmIjoxNjM0NjI1MzczLCJ1c2VyX2lkIjo0LCJyb2xlX2lkIjoyLCJmaXJzdF9uYW1lIjoidGVzdHVzZXIzIiwibGFzdF9uYW1lIjoiZGV2ZWxvcGVtZW50IiwiZW1haWwiOiJhbXJhbGUubmV0cmErM0BnbWFpbC5jb20iLCJzZXJ2aWNlIjoibmZzcyJ9.QFiVJM6UPRnueUtu_GvFoZ2nbGpd4Cf6rtJ6KkOo5fY"
         let formData = new FormData();           
         formData.append("file_key", event.target.files[0]);
-        axios.post(baseURL + "/file", formData, {
+        axios.post(Constants.BASEURL + "/createfile", formData, {
 
         "headers" :{
-            "Authorization" : "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzQ2MjU2NzMsImlhdCI6MTYzNDYyNTM3MywibmJmIjoxNjM0NjI1MzczLCJ1c2VyX2lkIjo0LCJyb2xlX2lkIjoyLCJmaXJzdF9uYW1lIjoidGVzdHVzZXIzIiwibGFzdF9uYW1lIjoiZGV2ZWxvcGVtZW50IiwiZW1haWwiOiJhbXJhbGUubmV0cmErM0BnbWFpbC5jb20iLCJzZXJ2aWNlIjoibmZzcyJ9.QFiVJM6UPRnueUtu_GvFoZ2nbGpd4Cf6rtJ6KkOo5fY"
+          'Content-type': 'application/json; charset=UTF-8',
+          'Authorization' : window.localStorage.getItem("token")
         }
         }).then( resp => {
 
